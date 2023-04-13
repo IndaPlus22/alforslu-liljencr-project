@@ -43,5 +43,11 @@ mod tests {
     }
 
     // Test attraction force vector function
+    #[test]
+    fn test_get_attraction_force_vector() {
+        let result = get_attraction_force_vector3(1.0, 1.0, na::Vector2::new(1.0, 1.0));
+        assert_eq!(result, na::Vector2::new(-2.359643613090756 * 10.0_f64.powi(-11), -2.359643613090756 * 10.0_f64.powi(-11)));
+    }
+
 }
 
