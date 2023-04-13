@@ -20,14 +20,17 @@ pub fn get_attraction_force(m1: f64, m2: f64, r: f64) -> f64 {
     g * (m1 * m2) / r.powi(2)
 }
 
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    // Test attraction force function
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn test_get_attraction_force() {
+        let result = get_attraction_force(1.0, 1.0, 1.0);
+        assert_eq!(result, 6.67408 * 10.0_f64.powi(-11));
     }
 }
 
