@@ -34,6 +34,7 @@ pub fn get_attraction_force_vector2(m1: f64, m2: f64, r1: Vec<f64>, r2: Vec<f64>
     vector2_to_vec(r.normalize() * force)
 }
 
+// Helper function to convert a nalgebra vector2 to a Vec<f64>
 fn vector2_to_vec(vec: na::Vector2<f64>) -> Vec<f64> {
     vec![vec.x, vec.y]
 }
