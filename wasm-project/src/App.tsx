@@ -10,11 +10,26 @@ function App() {
         });
     }, []);
 
+    const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) {
+            return;
+        }
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+            return;
+        }
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }, []);
+
     return (
         <div className={styles.app}>
-            <header className={styles.appHeader}>
-                <p>1 + 1 = {ans}</p>
-            </header>
+            <canvas
+                className={styles.canvas}
+                ref={canvasRef}
+            />
         </div>
     );
 }
