@@ -30,29 +30,30 @@ export default function Canvas({ isRunning }: CanvasProps) {
     useEffect(() => {   
         if (!isRunning) {
             if (i) {
-                clearInterval(i);}
-            } 
-            else {
-                const j = setInterval(() => {
-                    // calculate new positions
-                    const newBodies = bodies.map((b) => {
-                        for (const b2 of bodies) {
-                            if (b === b2) continue;
-                            const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
-                            b.direction[0] += force[0];
-                            b.direction[1] += force[1];
-                        }
-                        b.position[0] += b.direction[0];
-                        b.position[1] += b.direction[1];
-        
-                        return b;
-                    });
-
-                    clearCanvas();
-                    setBodies(newBodies);
-                }, 1000);
-                setI(j);
+                clearInterval(i);
             }
+        } 
+        else {
+            const j = setInterval(() => {
+                // calculate new positions
+                const newBodies = bodies.map((b) => {
+                    for (const b2 of bodies) {
+                        if (b === b2) continue;
+                        const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
+                        b.direction[0] += force[0];
+                        b.direction[1] += force[1];
+                    }
+                    b.position[0] += b.direction[0];
+                    b.position[1] += b.direction[1];
+    
+                    return b;
+                });
+
+                clearCanvas();
+                setBodies(newBodies);
+            }, 1000);
+            setI(j);
+        }
         
         return () => clearInterval(i);
     }, [isRunning]);
