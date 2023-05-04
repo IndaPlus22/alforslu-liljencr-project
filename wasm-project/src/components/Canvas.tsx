@@ -66,6 +66,17 @@ export default function Canvas({ isRunning }: CanvasProps) {
         drawBodies();
     }, [drawBodies]);
 
+    /* clear the canvas */
+    const clearCanvas = (ctx?: CanvasRenderingContext2D | null) => {
+        if (!ctx) {
+            ctx = getCanvasContext();
+            if (!ctx) return;
+        }
+
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    };
+
     /* resize canvas when window is resized */
     useEffect(() => {
         /* resize canvas to min(page width, page height) */
@@ -76,8 +87,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
             const size = Math.min(window.innerWidth - 390, window.innerHeight * 0.9);
             ctx.canvas.width = size;
             ctx.canvas.height = size;
-            ctx.fillStyle = "#000";
-            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            clearCanvas(ctx);
             setUpdate((cur) => !cur);
         };
 
