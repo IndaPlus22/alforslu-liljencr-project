@@ -24,11 +24,14 @@ fn get_attraction_force(m1: f64, m2: f64, r: f64) -> f64 {
 // Result is the force applied on object 2 exerted by object 1
 // https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation#Vector_form
 #[wasm_bindgen]
-pub fn get_attraction_force_vector2(m1: f64, m2: f64, r: Vec<f64>) -> Vec<f64> {
-    let r = na::Vector2::new(r[0], r[1]); // Ugly workaround
-    let g = 6.67408 * 10.0_f64.powi(-11); 
-    let force = -g * (m1 * m2) / r.norm_squared(); // Force is negative because it is applied on object 2
-    vector2_to_vec(r.normalize() * force) // Normalize the vector and multiply by the force
+pub fn get_attraction_force_vector2(m1: f64, m2: f64, r1: Vec<f64>, r2: Vec<f64>) -> Vec<f64> {
+    let r1 = na::Vector2::new(r1[0], r1[1]);
+    let r2 = na::Vector2::new(r2[0], r2[1]);
+    let r = r2 - r1;
+    let g = 6.67408 * 10.0_f64.powi(-11);
+    let force = -g * (m1 * m2) / r.norm_squared();
+
+    vector2_to_vec(r.normalize() * force)
 }
 
 fn vector2_to_vec(vec: na::Vector2<f64>) -> Vec<f64> {
