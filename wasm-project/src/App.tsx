@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./App.module.css";
 import init, { add } from "wasm-lib";
+
+interface Body {
+    position: [number, number];
+    radius: number;
+    color: string;
+}
 
 function App() {
     const [ans, setAns] = useState(0);
@@ -10,12 +16,51 @@ function App() {
         });
     }, []);
 
+    /* States */
+    const [body, setBody] = useState<Body[]>([]);
+    const [update, setUpdate] = useState(false);
+
+    /* Refs */
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+    /* memoize drawBodies, update it if body or update changes */
+    const drawBodies = useCallback(() => {
+        const ctx = getCanvasContext();
+        if (!ctx) return;
+
+        for (const b of body) {
+            ctx.fillStyle = b.color;
+            circle(ctx, b.position[0], b.position[1], b.radius);
+        }
+    }, [body, update]);
+
+    /* call drawBodies when it is updated */
     useEffect(() => {
+        drawBodies();
+    }, [drawBodies]);
+
+    /* resize canvas when window is resized */
+    useEffect(() => {
+        /* resize canvas to min(page width, page height) */
+        const resizeCanvas = () => {
+            const ctx = getCanvasContext();
+            if (!ctx) return;
+
+            const size = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+            ctx.canvas.width = size;
+            ctx.canvas.height = size;
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            setUpdate((cur) => !cur);
+        };
+
+        /* call it once, then add event listener */
+        resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
         return () => window.removeEventListener("resize", resizeCanvas);
     }, []);
 
+    /* get canvas context */
     const getCanvasContext = () => {
         const canvas = canvasRef.current;
         if (!canvas) {
@@ -28,17 +73,7 @@ function App() {
         return ctx;
     };
 
-    const resizeCanvas = () => {
-        const ctx = getCanvasContext();
-        if (!ctx) return;
-
-        const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9);
-        ctx.canvas.width = size;
-        ctx.canvas.height = size;
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    };
-
+    /* add body when canvas is clicked */
     const onClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -48,10 +83,18 @@ function App() {
 
         const rect = canvas.getBoundingClientRect();
         ctx.fillStyle = "red";
-        const vector2D = [e.clientX - rect.left, e.clientY - rect.top];
-        circle(ctx, vector2D[0], vector2D[1], 25);
+        const vector2D: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
+        setBody((cur) => [
+            ...cur,
+            {
+                position: vector2D,
+                radius: 25,
+                color: "red",
+            },
+        ]);
     };
 
+    /* draw a circle */
     const circle = (ctx: CanvasRenderingContext2D, x: number, y: number, r: number) => {
         ctx.beginPath();
         ctx.arc(x, y, r, 0, 2 * Math.PI);
