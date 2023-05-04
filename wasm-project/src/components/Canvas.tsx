@@ -46,6 +46,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
                     b.position[0] += b.direction[0];
                     b.position[1] += b.direction[1];
     
+                    console.log(b.position);
                     return b;
                 });
 
@@ -148,7 +149,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
     /* draw a circle */
     const circle = (ctx: CanvasRenderingContext2D, x: number, y: number, r: number) => {
         ctx.beginPath();
-        ctx.arc(x, y, r*SCALE, 0, 2 * Math.PI);
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
     };
