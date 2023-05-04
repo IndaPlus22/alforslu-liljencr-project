@@ -7,12 +7,16 @@
     font-size: calc(10px + 2vmin);
     color: white;
     height: 100vh;
-    max-height: 100vh;
+    padding: 0 30px;
+    gap: 30px;
 }
 
-.canvas {
-    width: min(90vh, 90vw);
+.settings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: dodgerblue;
+    border-radius: 20px;
     height: min(90vh, 90vw);
-    background-color: #282c34;
-    border-radius: 5px;
+    width: 300px;
 }
