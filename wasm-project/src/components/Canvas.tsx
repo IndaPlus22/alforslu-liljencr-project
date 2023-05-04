@@ -141,12 +141,12 @@ export default function Canvas({ isRunning }: CanvasProps) {
         const position: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
         setBodies((cur) => [
             ...cur,
-            {
+            { // TODO: add input for these values
                 position,
-                direction: [0, 0],
-                mass: 5.9722*(10**24)*SCALE,
-                radius: 6371000*SCALE,
-                color: "purple",
+                direction: [0*SCALE, 0*SCALE],  // Newtons
+                mass: 5.9722*(10**24)*SCALE, // KGs
+                radius: 63710000*SCALE, // meters
+                color: "purple", // poopy 
             },
         ]);
     };
