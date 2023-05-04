@@ -9,10 +9,3 @@
     height: 100vh;
     max-height: 100vh;
 }
-
-.canvas {
-    width: min(90vh, 90vw);
-    height: min(90vh, 90vw);
-    background-color: #282c34;
-    border-radius: 5px;
-}
