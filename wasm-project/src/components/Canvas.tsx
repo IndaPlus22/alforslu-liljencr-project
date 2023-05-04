@@ -11,6 +11,8 @@ interface Body {
     color: string;
 }
 
+const SCALE = 1e-3;
+
 interface CanvasProps {
     isRunning: boolean;
 }
@@ -19,36 +21,41 @@ export default function Canvas({ isRunning }: CanvasProps) {
     /* States */
     const [bodies, setBodies] = useState<Body[]>([]);
     const [update, setUpdate] = useState(false);
+    const [i, setI] = useState<NodeJS.Timeout>();
 
     /* Refs */
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
     /* Calculate new planet locations */
-    useEffect(() => {
-        const i = setInterval(() => {
-            let scale = 100000000;
-            // calculate new positions
-            const newBodies = bodies.map((b) => {
-                for (const b2 of bodies) {
-                    if (b === b2) continue;
-                    const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
-                    b.direction[0] += force[0] * scale;
-                    b.direction[1] += force[1] * scale;
-                    console.log("Moved", b.direction[0], b.direction[1]);
-                }
-                b.position[0] += b.direction[0];
-                b.position[1] += b.direction[1];
+    useEffect(() => {   
+        if (!isRunning) {
+            if (i) {
+                clearInterval(i);}
+            } 
+            else {
+                const j = setInterval(() => {
+                    // calculate new positions
+                    const newBodies = bodies.map((b) => {
+                        for (const b2 of bodies) {
+                            if (b === b2) continue;
+                            const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
+                            b.direction[0] += force[0];
+                            b.direction[1] += force[1];
+                        }
+                        b.position[0] += b.direction[0];
+                        b.position[1] += b.direction[1];
+        
+                        return b;
+                    });
 
-                return b;
-            });
-            console.log("Bodiess", bodies);
-            console.log("New bodies", newBodies);
-
-            setBodies(newBodies);
-        }, 1000);
-
+                    clearCanvas();
+                    setBodies(newBodies);
+                }, 1000);
+                setI(j);
+            }
+        
         return () => clearInterval(i);
-    }, []);
+    }, [isRunning]);
 
     /* memoize drawBodies, update it if bodies or update changes */
     const drawBodies = useCallback(() => {
@@ -129,9 +136,9 @@ export default function Canvas({ isRunning }: CanvasProps) {
             ...cur,
             {
                 position,
-                direction: [0, 0],
-                mass: 1,
-                radius: 25,
+                direction: [29951*SCALE, 0],
+                mass: 5.9722*(10**24)*SCALE,
+                radius: 6371000*SCALE,
                 color: "purple",
             },
         ]);
@@ -140,7 +147,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
     /* draw a circle */
     const circle = (ctx: CanvasRenderingContext2D, x: number, y: number, r: number) => {
         ctx.beginPath();
-        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.arc(x, y, r*SCALE, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
     };
