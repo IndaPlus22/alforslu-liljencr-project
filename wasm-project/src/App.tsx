@@ -4,6 +4,8 @@ import init, { add } from "wasm-lib";
 
 interface Body {
     position: [number, number];
+    direction: [number, number];
+    mass: number;
     radius: number;
     color: string;
 }
@@ -75,6 +77,7 @@ function App() {
 
     /* add body when canvas is clicked */
     const onClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+        e.preventDefault();
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -83,13 +86,15 @@ function App() {
 
         const rect = canvas.getBoundingClientRect();
         ctx.fillStyle = "red";
-        const vector2D: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
+        const position: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
         setBodies((cur) => [
             ...cur,
             {
-                position: vector2D,
+                position,
+                direction: [0, 0],
+                mass: 1,
                 radius: 25,
-                color: "red",
+                color: "purple",
             },
         ]);
     };
