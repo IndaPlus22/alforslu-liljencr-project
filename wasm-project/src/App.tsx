@@ -17,22 +17,22 @@ function App() {
     }, []);
 
     /* States */
-    const [body, setBody] = useState<Body[]>([]);
+    const [bodies, setBodies] = useState<Body[]>([]);
     const [update, setUpdate] = useState(false);
 
     /* Refs */
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
-    /* memoize drawBodies, update it if body or update changes */
+    /* memoize drawBodies, update it if bodies or update changes */
     const drawBodies = useCallback(() => {
         const ctx = getCanvasContext();
         if (!ctx) return;
 
-        for (const b of body) {
+        for (const b of bodies) {
             ctx.fillStyle = b.color;
             circle(ctx, b.position[0], b.position[1], b.radius);
         }
-    }, [body, update]);
+    }, [bodies, update]);
 
     /* call drawBodies when it is updated */
     useEffect(() => {
@@ -84,7 +84,7 @@ function App() {
         const rect = canvas.getBoundingClientRect();
         ctx.fillStyle = "red";
         const vector2D: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
-        setBody((cur) => [
+        setBodies((cur) => [
             ...cur,
             {
                 position: vector2D,
