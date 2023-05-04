@@ -29,7 +29,7 @@ pub fn get_attraction_force_vector2(m1: f64, m2: f64, r1: Vec<f64>, r2: Vec<f64>
     let r2 = na::Vector2::new(r2[0], r2[1]);
     let r = r2 - r1;
     let g = 6.67408 * 10.0_f64.powi(-11);
-    let force = -g * (m1 * m2) / r.norm_squared();
+    let force = g * (m1 * m2) / r.norm_squared();
 
     vector2_to_vec(r.normalize() * force)
 }

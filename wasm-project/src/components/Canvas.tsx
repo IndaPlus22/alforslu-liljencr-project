@@ -11,6 +11,8 @@ interface Body {
     color: string;
 }
 
+const SCALE = 1e-6;
+
 interface CanvasProps {
     isRunning: boolean;
 }
@@ -19,36 +21,48 @@ export default function Canvas({ isRunning }: CanvasProps) {
     /* States */
     const [bodies, setBodies] = useState<Body[]>([]);
     const [update, setUpdate] = useState(false);
+    const [i, setI] = useState<NodeJS.Timeout>();
 
     /* Refs */
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
     /* Calculate new planet locations */
-    useEffect(() => {
-        const i = setInterval(() => {
-            let scale = 100000000;
-            // calculate new positions
-            const newBodies = bodies.map((b) => {
-                for (const b2 of bodies) {
-                    if (b === b2) continue;
-                    const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
-                    b.direction[0] += force[0] * scale;
-                    b.direction[1] += force[1] * scale;
-                    console.log("Moved", b.direction[0], b.direction[1]);
-                }
-                b.position[0] += b.direction[0];
-                b.position[1] += b.direction[1];
+    useEffect(() => {   
+        if (!isRunning) {
+            if (i) {
+                clearInterval(i);
+            }
+        } 
+        else {
+            const j = setInterval(() => {
+                // calculate new positions
+                const newBodies = bodies.map((b) => {
+                    for (const b2 of bodies) {
+                        if (b === b2) continue;
+                        const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
+                        console.log("b.mass : " + b.mass);
+                        console.log("b2.mass : " + b2.mass);
+                        console.log("b.position : " + b.position);
+                        console.log("b2.position : " + b2.position);
+                        console.log("force : " + force);
+                        b.direction[0] += force[0] * 1e-21;
+                        b.direction[1] += force[1] * 1e-21;
+                    }
+                    b.position[0] += b.direction[0];
+                    b.position[1] += b.direction[1];
+    
+                    console.log(b.position);
+                    return b;
+                });
 
-                return b;
-            });
-            console.log("Bodiess", bodies);
-            console.log("New bodies", newBodies);
-
-            setBodies(newBodies);
-        }, 1000);
-
+                clearCanvas();
+                setBodies(newBodies);
+            }, 1000);
+            setI(j);
+        }
+        
         return () => clearInterval(i);
-    }, []);
+    }, [isRunning]);
 
     /* memoize drawBodies, update it if bodies or update changes */
     const drawBodies = useCallback(() => {
@@ -127,12 +141,12 @@ export default function Canvas({ isRunning }: CanvasProps) {
         const position: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
         setBodies((cur) => [
             ...cur,
-            {
+            { // TODO: add input for these values
                 position,
-                direction: [0, 0],
-                mass: 1,
-                radius: 25,
-                color: "purple",
+                direction: [0*SCALE, 0*SCALE],  // Newtons
+                mass: 5.9722*(10**24)*SCALE, // KGs
+                radius: 63710000*SCALE, // meters
+                color: "purple", // poopy 
             },
         ]);
     };
