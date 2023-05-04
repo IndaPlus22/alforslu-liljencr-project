@@ -11,7 +11,7 @@ interface Body {
     color: string;
 }
 
-const SCALE = 1e-3;
+const SCALE = 1e-6;
 
 interface CanvasProps {
     isRunning: boolean;
@@ -40,8 +40,13 @@ export default function Canvas({ isRunning }: CanvasProps) {
                     for (const b2 of bodies) {
                         if (b === b2) continue;
                         const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
-                        b.direction[0] += force[0];
-                        b.direction[1] += force[1];
+                        console.log("b.mass : " + b.mass);
+                        console.log("b2.mass : " + b2.mass);
+                        console.log("b.position : " + b.position);
+                        console.log("b2.position : " + b2.position);
+                        console.log("force : " + force);
+                        b.direction[0] += force[0] * 1e-21;
+                        b.direction[1] += force[1] * 1e-21;
                     }
                     b.position[0] += b.direction[0];
                     b.position[1] += b.direction[1];
@@ -138,7 +143,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
             ...cur,
             {
                 position,
-                direction: [29951*SCALE, 0],
+                direction: [0, 0],
                 mass: 5.9722*(10**24)*SCALE,
                 radius: 6371000*SCALE,
                 color: "purple",
