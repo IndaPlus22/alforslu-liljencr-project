@@ -9,7 +9,11 @@ interface Body {
     color: string;
 }
 
-export default function Canvas() {
+interface CanvasProps {
+    isRunning: boolean;
+}
+
+export default function Canvas({ isRunning }: CanvasProps) {
     /* States */
     const [bodies, setBodies] = useState<Body[]>([]);
     const [update, setUpdate] = useState(false);
@@ -40,7 +44,7 @@ export default function Canvas() {
             const ctx = getCanvasContext();
             if (!ctx) return;
 
-            const size = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+            const size = Math.min(window.innerWidth - 390, window.innerHeight * 0.9);
             ctx.canvas.width = size;
             ctx.canvas.height = size;
             ctx.fillStyle = "#000";
@@ -70,6 +74,9 @@ export default function Canvas() {
     /* add body when canvas is clicked */
     const onClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
         e.preventDefault();
+
+        if (isRunning) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 

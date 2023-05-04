@@ -11,9 +11,14 @@ function App() {
         });
     }, []);
 
+    const [isRunning, setIsRunning] = useState(false);
+
     return (
         <div className={styles.app}>
-            <Canvas />
+            <div className={styles.settings}>
+                <button onClick={() => setIsRunning((cur) => !cur)}>{isRunning ? "Stop" : "Start"}</button>
+            </div>
+            <Canvas isRunning={isRunning} />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 .canvas {
-    width: min(90vh, 90vw);
-    height: min(90vh, 90vw);
+    width: min(90vh, calc(100vw - 390px));
+    height: min(90vh, calc(100vw - 390px));
     background-color: #282c34;
     border-radius: 5px;
 }
