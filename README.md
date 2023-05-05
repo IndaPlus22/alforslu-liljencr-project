@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/56845820/236471712-f9b44f80-8e05-4980-ae3e-811f7d9d0700.png)
+
 # About
 This project lets a user create a simulation of gravitational bodies in relation to eachother, such as galaxies or planetary systems, using Rust and WASM running on a server accessible from an internet browser.
 
