@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { get_attraction_force_vector2 } from "wasm-lib";
+import { get_attraction_force_vector2, get_distance } from "wasm-lib";
 
 import styles from "./Canvas.module.css";
 
@@ -9,6 +9,7 @@ interface Body {
     mass: number;
     radius: number;
     color: string;
+    activated: boolean;
 }
 
 const SCALE = 1e-7;
@@ -40,6 +41,16 @@ export default function Canvas({ isRunning }: CanvasProps) {
                 const newBodies = bodies.map((b) => {
                     for (const b2 of bodies) {
                         if (b === b2) continue;
+                        if (!b.activated || !b2.activated) continue;
+                        if (isColliding(b, b2)) {
+                            b.color = "black"; // Make invis
+                            b2.color = "black";
+                            b.activated = false;
+                            b2.activated = false;
+                            
+                            //continue;
+                        }
+
                         const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
                         console.log("b.mass : " + b.mass);
                         console.log("b2.mass : " + b2.mass);
@@ -89,6 +100,11 @@ export default function Canvas({ isRunning }: CanvasProps) {
 
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    };
+
+    const isColliding = (b1: Body, b2: Body) => {
+        const distance = get_distance(b1.position as unknown as Float64Array, b2.position as unknown as Float64Array);
+        return distance < b1.radius + b2.radius;
     };
 
     /* resize canvas when window is resized */
@@ -147,6 +163,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
                 mass: 5.9722*(10**24)*SCALE, // KGs
                 radius: 63710000*SCALE, // meters
                 color: "purple", // poopy 
+                activated: true,
             },
         ]);
     };
