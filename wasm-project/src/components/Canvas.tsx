@@ -40,6 +40,12 @@ export default function Canvas({ isRunning }: CanvasProps) {
                 const newBodies = bodies.map((b) => {
                     for (const b2 of bodies) {
                         if (b === b2) continue;
+                        if (isColliding(b, b2)) {
+                            b.color = "blue";
+                            b2.color = "blue";
+                            continue;
+                        }
+
                         const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
                         console.log("b.mass : " + b.mass);
                         console.log("b2.mass : " + b2.mass);
@@ -89,6 +95,11 @@ export default function Canvas({ isRunning }: CanvasProps) {
 
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    };
+
+    const isColliding = (b1: Body, b2: Body) => {
+        const distance = Math.sqrt((b1.position[0] - b2.position[0])**2 + (b1.position[1] - b2.position[1])**2);
+        return distance < b1.radius + b2.radius;
     };
 
     /* resize canvas when window is resized */
