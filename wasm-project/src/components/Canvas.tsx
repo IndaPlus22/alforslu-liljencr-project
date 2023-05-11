@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { get_attraction_force_vector2 } from "wasm-lib";
+import { get_attraction_force_vector2, get_distance } from "wasm-lib";
 
 import styles from "./Canvas.module.css";
 
@@ -98,7 +98,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
     };
 
     const isColliding = (b1: Body, b2: Body) => {
-        const distance = Math.sqrt((b1.position[0] - b2.position[0])**2 + (b1.position[1] - b2.position[1])**2);
+        const distance = get_distance(b1.position as unknown as Float64Array, b2.position as unknown as Float64Array);
         return distance < b1.radius + b2.radius;
     };
 
