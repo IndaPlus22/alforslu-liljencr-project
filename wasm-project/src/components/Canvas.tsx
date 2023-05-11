@@ -9,6 +9,7 @@ interface Body {
     mass: number;
     radius: number;
     color: string;
+    activated: boolean;
 }
 
 const SCALE = 1e-7;
@@ -40,10 +41,14 @@ export default function Canvas({ isRunning }: CanvasProps) {
                 const newBodies = bodies.map((b) => {
                     for (const b2 of bodies) {
                         if (b === b2) continue;
+                        if (!b.activated || !b2.activated) continue;
                         if (isColliding(b, b2)) {
-                            b.color = "blue";
-                            b2.color = "blue";
-                            continue;
+                            b.color = "black"; // Make invis
+                            b2.color = "black";
+                            b.activated = false;
+                            b2.activated = false;
+                            
+                            //continue;
                         }
 
                         const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
@@ -158,6 +163,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
                 mass: 5.9722*(10**24)*SCALE, // KGs
                 radius: 63710000*SCALE, // meters
                 color: "purple", // poopy 
+                activated: true,
             },
         ]);
     };
