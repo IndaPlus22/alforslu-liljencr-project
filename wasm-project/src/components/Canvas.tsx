@@ -12,7 +12,7 @@ interface Body {
 }
 
 const SCALE = 1e-7;
-const TICK_RATE = 1000;
+const TICK_RATE = 50; // Hz, 50 ticks per second is a good balance between smoothness and flickering colors.
 
 interface CanvasProps {
     isRunning: boolean;
@@ -55,7 +55,6 @@ export default function Canvas({ isRunning }: CanvasProps) {
                     console.log(b.position);
                     return b;
                 });
-
                 setBodies(newBodies);
                 clearCanvas();
             }, 1000/TICK_RATE);
