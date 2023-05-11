@@ -17,9 +17,14 @@ const TICK_RATE = 50; // Hz, 50 ticks per second is a good balance between smoot
 
 interface CanvasProps {
     isRunning: boolean;
+    mass: number;
+    radius: number;
+    color: string;
+    direction?: [number, number];
+    speed: number;
 }
 
-export default function Canvas({ isRunning }: CanvasProps) {
+export default function Canvas({ isRunning, mass, radius, color, direction = [0, 0], speed }: CanvasProps) {
     /* States */
     const [bodies, setBodies] = useState<Body[]>([]);
     const [update, setUpdate] = useState(false);
@@ -29,13 +34,12 @@ export default function Canvas({ isRunning }: CanvasProps) {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
     /* Calculate new planet locations */
-    useEffect(() => {   
+    useEffect(() => {
         if (!isRunning) {
             if (i) {
                 clearInterval(i);
             }
-        } 
-        else {
+        } else {
             const j = setInterval(() => {
                 // calculate new positions
                 const newBodies = bodies.map((b) => {
@@ -47,7 +51,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
                             b2.color = "black";
                             b.activated = false;
                             b2.activated = false;
-                            
+
                             continue;
                         }
 
@@ -60,18 +64,18 @@ export default function Canvas({ isRunning }: CanvasProps) {
                         b.direction[0] += force[0] * 1e-21;
                         b.direction[1] += force[1] * 1e-21;
                     }
-                    b.position[0] += b.direction[0] * (1/TICK_RATE);
-                    b.position[1] += b.direction[1] * (1/TICK_RATE);
-    
+                    b.position[0] += b.direction[0] * (1 / TICK_RATE);
+                    b.position[1] += b.direction[1] * (1 / TICK_RATE);
+
                     console.log(b.position);
                     return b;
                 });
                 setBodies(newBodies);
                 clearCanvas();
-            }, 1000/TICK_RATE);
+            }, 1000 / TICK_RATE);
             setI(j);
         }
-        
+
         return () => clearInterval(i);
     }, [isRunning]);
 
@@ -157,12 +161,12 @@ export default function Canvas({ isRunning }: CanvasProps) {
         const position: [number, number] = [e.clientX - rect.left, e.clientY - rect.top];
         setBodies((cur) => [
             ...cur,
-            { // TODO: add input for these values
+            {
                 position,
-                direction: [0*SCALE, 0*SCALE],  // Newtons
-                mass: 5.9722*(10**24)*SCALE, // KGs
-                radius: 63710000*SCALE, // meters
-                color: "purple", // poopy 
+                direction: [direction[0] * SCALE, direction[1] * SCALE], // Newtons, I have a speed prop that should affect this plz implement :))
+                mass: mass * SCALE, // KGs
+                radius: radius * SCALE, // meters
+                color: color, // poopy
                 activated: true,
             },
         ]);
