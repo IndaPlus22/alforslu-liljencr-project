@@ -11,7 +11,8 @@ interface Body {
     color: string;
 }
 
-const SCALE = 1e-6;
+const SCALE = 1e-7;
+const TICK_RATE = 1000;
 
 interface CanvasProps {
     isRunning: boolean;
@@ -48,16 +49,16 @@ export default function Canvas({ isRunning }: CanvasProps) {
                         b.direction[0] += force[0] * 1e-21;
                         b.direction[1] += force[1] * 1e-21;
                     }
-                    b.position[0] += b.direction[0];
-                    b.position[1] += b.direction[1];
+                    b.position[0] += b.direction[0] * (1/TICK_RATE);
+                    b.position[1] += b.direction[1] * (1/TICK_RATE);
     
                     console.log(b.position);
                     return b;
                 });
 
-                clearCanvas();
                 setBodies(newBodies);
-            }, 1000);
+                clearCanvas();
+            }, 1000/TICK_RATE);
             setI(j);
         }
         
