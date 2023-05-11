@@ -48,7 +48,7 @@ export default function Canvas({ isRunning }: CanvasProps) {
                             b.activated = false;
                             b2.activated = false;
                             
-                            //continue;
+                            continue;
                         }
 
                         const force = get_attraction_force_vector2(b.mass, b2.mass, b.position as unknown as Float64Array, b2.position as unknown as Float64Array);
