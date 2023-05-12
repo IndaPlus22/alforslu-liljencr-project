@@ -47,7 +47,7 @@ function App() {
                         style={{ paddingTop: 1, paddingBottom: 1 }}
                     />
                     Presets:
-                    <div style={{display: 'flex'}}>
+                    <div style={{display: 'flex', columnGap: '4px'}}>
                         <Button 
                             onClick={() => {
                                 setColor('#0000FF');
