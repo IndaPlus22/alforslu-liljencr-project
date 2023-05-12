@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import Canvas from "./components/Canvas";
+import init from "wasm-lib"
 import { Button } from "./components/Button";
 import { Input } from "./components/Input";
 
@@ -13,6 +14,10 @@ function App() {
     const [color, setColor] = useState<string>("#b30092");
     /* const [direction, setDirection] = useState<number>(0);
     const [speed, setSpeed] = useState<string>("0"); */
+
+    useEffect(() => {
+        init();
+    }, []);
 
     return (
         <div className={styles.app}>
