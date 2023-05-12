@@ -64,10 +64,10 @@ export default function Canvas({ isRunning, mass, radius, color, direction = [0,
                         b.direction[0] += force[0] * 1e-21;
                         b.direction[1] += force[1] * 1e-21;
                     }
-                    b.position[0] += b.direction[0] * (1 / TICK_RATE);
-                    b.position[1] += b.direction[1] * (1 / TICK_RATE);
+                    b.position[0] += (b.direction[0] / (b.mass * 1e-16)); // MAGIC NUMBER AF 
+                    b.position[1] += (b.direction[1] / (b.mass * 1e-16)); // MAGIC NUMBER AF
 
-                    console.log(b.position);
+                    console.log(b.direction[0] / (b.mass * SCALE));
                     return b;
                 });
                 setBodies(newBodies);
