@@ -21,10 +21,9 @@ interface CanvasProps {
     radius: number;
     color: string;
     direction?: [number, number];
-    speed: number;
 }
 
-export default function Canvas({ isRunning, mass, radius, color, direction = [0, 0], speed }: CanvasProps) {
+export default function Canvas({ isRunning, mass, radius, color, direction = [0, 0] }: CanvasProps) {
     /* States */
     const [bodies, setBodies] = useState<Body[]>([]);
     const [update, setUpdate] = useState(false);
