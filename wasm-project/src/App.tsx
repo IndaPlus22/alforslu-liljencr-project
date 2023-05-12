@@ -41,6 +41,19 @@ function App() {
                         onChange={(e) => setColor(e.currentTarget.value)}
                         style={{ paddingTop: 1, paddingBottom: 1 }}
                     />
+                    Presets:
+                    <div style={{display: 'flex'}}>
+                    <Button onClick={() => {
+                        setColor('#0000FF');
+                        setRadius('6.371e+7')
+                        setMass('5.9722e+24')
+                    }}>Earth</Button>
+                    <Button onClick={() => {
+                        setColor('#FF00FF');
+                        setRadius('6.371e+7')
+                        setMass('5.9722e+25')
+                    }}>Heavy Earth</Button>
+                    </div>
                     {/* Direction and speed not supported yet */}
                     {/* <Input
                         placeholder="speed"
